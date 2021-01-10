@@ -1,34 +1,34 @@
 apiVersion: v1                    # API version
 kind: Service                     # Type of kubernetes resource
 metadata:
-  name: bikes-service-mysql   # Name of the service
+  name: bike-mysql   # Name of the service
   labels:                         # Labels that will be applied to the service
-    app: bikes-service
+    app: bike
 spec:
   ports:
     - port: 3306
   selector:                       # Selects any Pod with labels `app=book-info-service,tier=mysql`
-    app: bikes-service
+    app: bike
     tier: mysql
   clusterIP: None
 ---
 apiVersion: apps/v1
 kind: Deployment                    # Type of the kubernetes resource
 metadata:
-  name: bikes-service-mysql-deployment           # Name of the deployment
+  name: bike-mysql-deployment           # Name of the deployment
   labels:                           # Labels applied to this deployment
-    app: bikes-service
+    app: bike
 spec:
   selector:
     matchLabels:                    # This deployment applies to the Pods matching the specified labels
-      app: bikes-service
+      app: bike
       tier: mysql
   strategy:
     type: Recreate
   template:                         # Template for the Pods in this deployment
     metadata:
       labels:                       # Labels to be applied to the Pods in this deployment
-        app: bikes-service
+        app: bike
         tier: mysql
     spec:                           # The spec for the containers that will be run inside the Pods in this deployment
       containers:
@@ -44,22 +44,22 @@ spec:
 apiVersion: apps/v1           # API version
 kind: Deployment              # Type of kubernetes resource
 metadata:
-  name: bikes-service-server-deployment    # Name of the deployment
+  name: bike-server-deployment    # Name of the deployment
   labels:                     # Labels that will be applied to this deployment
-    app: bikes-service-server
+    app: bike-server
 spec:
   replicas: 1                 # No. of replicas/pods to run in this deployment
   selector:
     matchLabels:              # The deployment applies to any pods mayching the specified labels
-      app: bikes-service-server
+      app: bike-server
   template:                   # Template for creating the pods in this deployment
     metadata:
       labels:                 # Labels that will be applied to each Pod in this deployment
-        app: bikes-service-server
+        app: bike-server
     spec:                     # Spec for the containers that will be run in the Pods
       containers:
-        - name: bikes-service-server
-          image: wamhaini/bikes-service
+        - name: bike-server
+          image: wamhaini/bike
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
@@ -74,18 +74,18 @@ spec:
             - name: MYSQL_DB_PASSWORD
               value: "abc123"
             - name: MYSQL_DB_HOST
-              value: "bikes-service-mysql"
+              value: "bike-mysql"
 ---
 apiVersion: v1                      # API version
 kind: Service                       # Type of the kubernetes resource
 metadata:
-  name: bikes-service-server    # Name of the service
+  name: bike-server    # Name of the service
   labels:                           # Labels that will be applied to this service
-    app: bikes-service-server
+    app: bike-server
 spec:
   type: NodePort                    # The service will be exposed by opening a Port on each node and proxying it. Allowing connections from outside the cluster
   selector:
-    app: bikes-service-server   # The service exposes Pods with label `app=book-info-service-server`
+    app: bike-server   # The service exposes Pods with label `app=book-info-service-server`
   ports:                            # Forward incoming connections on port 8080 to the target port 8051
     - name: http
       port: 8054

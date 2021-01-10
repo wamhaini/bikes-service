@@ -38,7 +38,7 @@ jobs:
         with:
           host port: 3306 #to be changed
           container port: 3306
-          mysql database: 'bikes-service-mysql' # Optional, default value is "test". The specified database which will be create
+          mysql database: 'bike-mysql' # Optional, default value is "test". The specified database which will be create
           mysql root password: ${{ secrets.MYSQL_ROOT_PASSWORD }} # Required if "mysql user" is empty, default is empty. The root superuser password
 
       - name: Test and build project
@@ -53,14 +53,14 @@ jobs:
       - name: Upload Maven build artifact
         uses: actions/upload-artifact@v1
         with:
-          name: bikes-service-artifact.jar
-          path: ./target/bikes-service-0.0.1-SNAPSHOT.jar
+          name: bike-artifact.jar
+          path: ./target/bike-0.0.1-SNAPSHOT.jar
 
       - name: Docker login
         run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Docker Build
-        run: docker build -t ${{ secrets.DOCKER_USER }}/bikes-service:latest .
+        run: docker build -t ${{ secrets.DOCKER_USER }}/bike:latest .
 
       - name: Upload container to Docker Hub with Push
-        run: docker push ${{ secrets.DOCKER_USER }}/bikes-service:latest
+        run: docker push ${{ secrets.DOCKER_USER }}/bike:latest
