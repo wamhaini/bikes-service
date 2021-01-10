@@ -53,7 +53,7 @@ jobs:
       - name: Upload Maven build artifact
         uses: actions/upload-artifact@v1
         with:
-          name: car-parts-service-artifact.jar
+          name: bikes-service-artifact.jar
           path: ./target/bikes-service-0.0.1-SNAPSHOT.jar
 
       - name: Docker login
